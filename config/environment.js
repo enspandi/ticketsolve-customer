@@ -32,6 +32,11 @@ module.exports = function(environment) {
   }
 
   if (environment === 'test') {
+
+    ENV['ember-tether'] = {
+      bodyElementId: 'ember-testing'
+    };
+
     // Testem prefers this...
     ENV.locationType = 'none';
 
@@ -45,6 +50,10 @@ module.exports = function(environment) {
 
   if (environment === 'production') {
     // here you can enable a production-specific feature
+
+    ENV['ember-cli-mirage'] = {
+      enabled: true
+    };
   }
 
   return ENV;

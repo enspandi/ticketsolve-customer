@@ -1,0 +1,16 @@
+.app {
+  display: flex;
+  flex-direction: column;
+}
+.header {
+  margin: 0 auto;
+}
+.body {
+  margin: 0 auto;
+}
+.page-title {
+  font-family: 'Righteous', cursive;
+  color: #e91e63;
+  font-size: 38px;
+  font-weight: bold;
+}

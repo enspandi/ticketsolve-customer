@@ -1,0 +1,38 @@
+<input type="search" placeholder="Assign customer" role="combobox" aria-expanded={{isOpen}}
+  data-test-search-input
+  onfocus={{action 'open'}}
+  onblur={{action 'close'}}
+  oninput={{action (perform debounceSearch) value="target.value"}}>
+
+{{#if isOpen}}
+  <div>
+    {{#customer-search/-dropdown attachTo=elementId as |dropdown|}}
+      {{#if debounceSearch.isRunning}}
+        <div local-class="loading-info">
+          {{loading-spinner}} <i>searching...</i>
+        </div>
+      {{/if}}
+
+      {{#each customers as |customer|}}
+        {{#dropdown.item
+            isHighlighted=(eq customer highlighted)
+            onClick=(action 'select' customer)
+            onMouseEnter=(action 'highlight' customer)
+            onMouseLeave=(action 'highlight' null)
+          }}
+          {{#if hasBlock}}
+            {{yield customer keyword}}
+          {{else}}
+            {{ui-customer-card customer=customer keyword=keyword}}
+          {{/if}}
+        {{/dropdown.item}}
+      {{else if keyword}}
+        <div local-class="no-results-info" data-test-no-result-info>No customers found...</div>
+      {{/each}}
+
+      <button local-class="create-button" type="button" data-test-create-btn>
+        Create a new customer
+      </button>
+    {{/customer-search/-dropdown}}
+  </div>
+{{/if}}

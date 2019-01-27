@@ -1,0 +1,9 @@
+<div local-class="customer-card">
+  <div local-class="customer-name">
+    {{highlight-keyword (concat customer.firstName " " customer.lastName) keyword}}
+  </div>
+  <div local-class="customer-info">
+    <div>{{highlight-keyword customer.email keyword}}</div>
+    <div>{{highlight-keyword customer.phone keyword}}</div>
+  </div>
+</div>
