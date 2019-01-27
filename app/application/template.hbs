@@ -1,1 +1,12 @@
-{{outlet}}
+<div local-class="app">
+  <section local-class="header">
+    <h1 local-class="page-title">Teathre Ticket Office</h1>
+  </section>
+
+  <section local-class="body">
+    {{#customer-search as |customer keyword|}}
+      {{ui-customer-card customer=customer keyword=keyword}}
+    {{/customer-search}}
+    {{outlet}}
+  </section>
+</div>
