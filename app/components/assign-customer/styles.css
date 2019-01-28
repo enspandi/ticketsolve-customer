@@ -1,4 +1,4 @@
-:global(.ui-input) {
+.input-group {
   background: white;
   border: 1px solid #ddd;
   width: 450px;
@@ -7,14 +7,13 @@
   display: flex;
   justify-content: flex-start;
 }
-:global(.ui-input.is-open) {
+.input-group.is-open {
   border-color: #333;
 }
-:global(.ui-input > div) {
+.input-group > div {
   width: 100%;
 }
-
-:global(.ui-input input) {
+.input-group input {
   width: 100%;
   font-size: 16px;
   padding: 5px 15px;
@@ -23,7 +22,7 @@
   background: none;
   outline: none;
 }
-:global(.ui-input > img) {
+.input-group > img {
   margin-left: 12px;
   align-self: center;
 }

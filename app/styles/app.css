@@ -8,5 +8,8 @@ body {
   background: #efefef;
   font-family: sans-serif;
 }
-
-@import "input-style";
+button {
+  background: none;
+  border: none;
+  cursor: pointer;
+}
