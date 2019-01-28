@@ -10,16 +10,25 @@ function findOption(number) {
   return document.querySelector(`[data-test-dropdown-item]:nth-child(${number})`)
 }
 function isOptionHighlighted(number) {
-  return !isNone(findOption(number).getAttribute('data-test-is-highlighted'));
+  return !isNone(findOption(number).getAttribute('data-test-is-active'));
 }
 function navigateDown() {
-  return triggerKeyEvent('[data-test-search-input]', 'keydown', 40);
+  return triggerKeyEvent('[data-test-dropdown-trigger]', 'keydown', 40);
 }
 function navigateUp() {
-  return triggerKeyEvent('[data-test-search-input]', 'keydown', 38);
+  return triggerKeyEvent('[data-test-dropdown-trigger]', 'keydown', 38);
 }
 function pressEnter() {
-  return triggerKeyEvent('[data-test-search-input]', 'keydown', 13);
+  return triggerKeyEvent('[data-test-dropdown-trigger]', 'keydown', 13);
+}
+
+function renderDropdown() {
+  return render(hbs`
+    {{#customer-search as |search|}}
+      {{search.trigger}}
+      {{search.dropdown}}
+    {{/customer-search}}
+  `);
 }
 
 module('Integration | Component | customer-search', function(hooks) {
@@ -27,53 +36,54 @@ module('Integration | Component | customer-search', function(hooks) {
   setupMirage(hooks);
 
   test('When the text input is focused, expand the dropdown', async function(assert) {
-    await render(hbs`{{customer-search}}`);
+    await renderDropdown();
 
-    await click(this.element.querySelector('[data-test-search-input]'));
+    await click(this.element.querySelector('[data-test-dropdown-trigger]'));
 
-    assert.ok(this.element.parentNode.querySelector('[data-test-dropdown-list]'), 'Dropdown is open');
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
   });
   test('When the dropdown is expanded, a `Create a new customer` option will always be visisble', async function(assert) {
-    await render(hbs`{{customer-search}}`);
+    await renderDropdown();
 
-    await click(this.element.querySelector('[data-test-search-input]'));
-    assert.ok(this.element.parentNode.querySelector('[data-test-create-btn]'), 'Create option is shown initially');
+    await click(this.element.querySelector('[data-test-dropdown-trigger]'));
+    assert.ok(document.querySelector('[data-test-create-btn]'), 'Create option is shown initially');
 
-    await fillIn('[data-test-search-input]', 'J');
-    assert.ok(this.element.parentNode.querySelector('[data-test-create-btn]'), 'Create option is shown during loading');
+    await fillIn('[data-test-dropdown-trigger]', 'J');
+    assert.ok(document.querySelector('[data-test-create-btn]'), 'Create option is shown during loading');
 
     await settled();
-    assert.equal(this.element.parentNode.querySelector('[data-test-no-result-info').textContent.trim(), 'No customers found...', 'Empty result message is visible');
-    assert.ok(this.element.parentNode.querySelector('[data-test-create-btn]'), 'Create option is shown when no result');
+    assert.equal(document.querySelector('[data-test-no-result').textContent.trim(), 'No customers found...', 'Empty result message is visible');
+    assert.ok(document.querySelector('[data-test-create-btn]'), 'Create option is shown when no result');
 
     server.create('customer', { firstName: 'John' });
-    await fillIn('[data-test-search-input]', 'John');
+    await fillIn('[data-test-dropdown-trigger]', 'John');
     await settled();
 
-    assert.equal(this.element.parentNode.querySelectorAll('[data-test-dropdown-item]').length, 1, 'One result is visible');
-    assert.ok(this.element.parentNode.querySelector('[data-test-create-btn]'), 'Create option is shown when results available');
+    assert.equal(document.querySelectorAll('[data-test-dropdown-item]').length, 1, 'One result is visible');
+    assert.ok(document.querySelector('[data-test-create-btn]'), 'Create option is shown when results available');
   });
   test('Show the results in a list with hovering state', async function(assert) {
     server.create('customer', { firstName: 'John' });
     server.create('customer', { firstName: 'Tom' });
     server.create('customer', { firstName: 'Monika' });
-    await render(hbs`{{customer-search}}`);
-    await fillIn('[data-test-search-input]', 'o');
+    await renderDropdown();
+    await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
-    assert.equal(this.element.parentNode.querySelectorAll('[data-test-dropdown-item]').length, 3, 'Dropdown items are visible');
+    assert.equal(document.querySelectorAll('[data-test-dropdown-item]').length, 3, 'Dropdown items are visible');
 
     await triggerEvent('[data-test-dropdown-item]:nth-child(2)', 'mouseover');
-    assert.ok(isNone(this.element.parentNode.querySelector("[data-test-dropdown-item]:nth-child(1)").getAttribute('data-test-is-highlighted')), 'Option 1 is not highlighted');
-    assert.ok(!isNone(this.element.parentNode.querySelector("[data-test-dropdown-item]:nth-child(2)").getAttribute('data-test-is-highlighted')), 'Option 2 is highlighted');
-    assert.ok(isNone(this.element.parentNode.querySelector("[data-test-dropdown-item]:nth-child(3)").getAttribute('data-test-is-highlighted')), 'Option 3 is not highlighted');
+
+    assert.ok(!isOptionHighlighted(1), 'Option 1 is not highlighted');
+    assert.ok(isOptionHighlighted(2), 'Option 2 is highlighted');
+    assert.ok(!isOptionHighlighted(3), 'Option 3 is not highlighted');
   });
   test('User can use down and up arrow keys to navigate across the list', async function(assert) {
     server.create('customer', { firstName: 'John' });
     server.create('customer', { firstName: 'Tom' });
     server.create('customer', { firstName: 'Monika' });
-    await render(hbs`{{customer-search}}`);
-    await fillIn('[data-test-search-input]', 'o');
+    await renderDropdown();
+    await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
     await navigateDown();
@@ -96,11 +106,14 @@ module('Integration | Component | customer-search', function(hooks) {
     server.create('customer', { firstName: 'Tom' });
     server.create('customer', { firstName: 'Monika' });
     await render(hbs`
-      {{#customer-search as |customer|}}
-        Hello {{customer.firstName}}!
+      {{#customer-search as |search|}}
+        {{search.trigger}}
+        {{#search.dropdown as |customer|}}
+          Hello {{customer.firstName}}!
+        {{/search.dropdown}}
       {{/customer-search}}
     `);
-    await fillIn('[data-test-search-input]', 'o');
+    await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
     await navigateDown();
@@ -118,24 +131,30 @@ module('Integration | Component | customer-search', function(hooks) {
       'selectHandler',
       (customer) => assert.equal(customer.firstName, 'John', 'Click and enter key invokes select handler')
     );
-    await render(hbs`{{customer-search onSelect=selectHandler}}`);
-    await fillIn('[data-test-search-input]', 'o');
+    await render(hbs`
+      {{#customer-search onSelect=selectHandler as |search|}}
+        {{search.trigger}}
+        {{search.dropdown}}
+      {{/customer-search}}
+    `);
+
+    await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
-    assert.ok(this.element.parentNode.querySelector('[data-test-dropdown-list]'), 'Dropdown is open');
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
 
     await click(`[data-test-dropdown-item]:nth-child(1)`);
 
-    assert.ok(!this.element.parentNode.querySelector('[data-test-dropdown-list]'), 'Dropdown is closed');
+    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed');
 
-    await fillIn('[data-test-search-input]', 'o');
+    await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
-    assert.ok(this.element.parentNode.querySelector('[data-test-dropdown-list]'), 'Dropdown is open');
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
 
     await navigateDown();
     await pressEnter();
 
-    assert.ok(!this.element.parentNode.querySelector('[data-test-dropdown-list]'), 'Dropdown is closed');
+    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed');
   });
 });

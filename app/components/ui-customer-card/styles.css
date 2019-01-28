@@ -1,12 +1,17 @@
 .customer-card {
   padding: 8px;
 }
+
 .customer-name {
   color: #2a3034;
   font-weight: bold;
   padding-bottom: 6px;
   font-size: 15px;
 }
+:global(.is-active) .customer-name {
+  color: white;
+}
+
 .customer-info {
   color: #b2b2b3;
   font-size: 13px;
@@ -15,20 +20,16 @@
   justify-content: space-between
 }
 
-
 .customer-card :global(.text-highlight) {
   color: #2a3034;
   font-weight: bold;
 }
-
-:global(.is-highlighted) .customer-card {
-  background: #0e1c35;
-}
-
-:global(.is-highlighted) .customer-card :global(.text-highlight) {
+:global(.is-active) .customer-card :global(.text-highlight) {
   color: white;
   background: #39445a;
 }
-:global(.is-highlighted) .customer-card .customer-name {
-  color: white;
+
+:global(.is-active) .customer-card {
+  background: #0e1c35;
 }
+

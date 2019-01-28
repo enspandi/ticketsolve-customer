@@ -1,0 +1,40 @@
+.dropdown-inner {
+  background: white;
+  border: 1px solid #ddd;
+}
+.dropdown-inner ul {
+  margin: 0;
+  padding: 0;
+  list-style-type: none;
+}
+.dropdown-inner li {
+  cursor: pointer;
+}
+
+.create-btn {
+  display: block;
+  width: 100%;
+  border: none;
+  background: #cc2f6a;
+  color: #fefefe;
+  font-size: 15px;
+  font-weight: bold;
+  text-align: center;
+  padding: 10px;
+  cursor: pointer;
+}
+.create-btn:hover {
+  background: #a31a4e;
+}
+
+.no-result {
+  padding: 8px;
+  color: #333;
+  font-weight: bold;
+  font-size: 13px;
+}
+
+.loading {
+  padding: 15px;
+  font-size: 13px;
+}

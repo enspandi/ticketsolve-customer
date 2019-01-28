@@ -4,14 +4,14 @@ import { reads } from '@ember/object/computed';
 export default Component.extend({
   tagName: 'li',
 
-  classNameBindings: ['isHighlighted'],
+  classNameBindings: ['isActive'],
   attributeBindings: ['role', 'ariaCurrent', 'tabindex'],
   role: 'option',
-  arriaCurrent: reads('isHighlighted'),
+  arriaCurrent: reads('isActive'),
   tabindex: '-1',
 
   'data-test-dropdown-item': true,
-  'data-test-is-highlighted': reads('isHighlighted'),
+  'data-test-is-active': reads('isActive'),
 
   onMouseEnter: () => {},
   onMouseLeave: () => {},

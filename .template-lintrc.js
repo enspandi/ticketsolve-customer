@@ -5,6 +5,7 @@ module.exports = {
 
   rules: {
     'self-closing-void-elements': false,
-    'quotes': false
+    'quotes': false,
+    'no-inline-styles': false
   }
 };

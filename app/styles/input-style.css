@@ -1,0 +1,28 @@
+:global(.ui-input) {
+  background: white;
+  border: 1px solid #ddd;
+  width: 450px;
+
+  display: flex;
+  justify-content: space-between
+}
+:global(.ui-input.is-open) {
+  border-color: #333;
+}
+:global(.ui-input > div) {
+  width: 100%;
+}
+
+:global(.ui-input input) {
+  width: 100%;
+  font-size: 16px;
+  padding: 5px 15px;
+  height: 40px;
+  border: none;
+  background: none;
+  outline: none;
+}
+:global(.ui-input > img) {
+  margin-left: 12px;
+  align-self: center;
+}
