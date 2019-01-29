@@ -1,6 +1,7 @@
 import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isNone } from '@ember/utils';
+import { htmlSafe } from '@ember/template';
 
 const KEY_UP = 38;
 const KEY_DOWN = 40;
@@ -22,7 +23,7 @@ export default Component.extend({
   },
 
   _setParentWidth() {
-    this.set('dropdownStyle', `width: ${this.attachTo.offsetWidth}px`);
+    this.set('dropdownStyle', htmlSafe(`width: ${this.attachTo.offsetWidth}px`));
   },
 
   willDestroyElement() {
@@ -46,7 +47,9 @@ export default Component.extend({
     } else if (e.keyCode === KEY_UP) {
       this.prevActive();
     } else if (e.keyCode === KEY_ENTER) {
-      this.onSelect(this.activeOption);
+      if (this.activeOption) {
+        this.onSelect(this.activeOption);
+      }
     }
   },
 

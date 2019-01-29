@@ -4,20 +4,8 @@
   </section>
 
   <section local-class="body">
-    {{#customer-search
-        onSelect=(action 'select')
-        onCreate=(action 'create') as |search keyword|}}
-      <label class="ui-input {{if search.isOpen 'is-open'}}">
-        <img src="assets/icon-customer.png" alt="Customer" />
-        {{#if customer}}
-        {{else}}
-          {{search.trigger placeholder="Assign customer"}}
-        {{/if}}
-      </label>
-      {{#search.dropdown as |option|}}
-        {{ui-customer-card model=option highlight=keyword}}
-      {{/search.dropdown}}
-    {{/customer-search}}
+
+    {{assign-customer}}
 
     {{outlet}}
   </section>
