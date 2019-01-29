@@ -1,0 +1,13 @@
+.form-group-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+.form-group {
+  flex: 0 50%;
+  padding-right: 10px;
+}
+.form-actions {
+  text-align: right;
+  padding: 10px;
+  button { margin-left: 10px; }
+}

@@ -1,0 +1,10 @@
+<button data-test-button={{style}}
+  local-class="ui-button {{style}}"
+  disabled={{isLoading}}
+  type={{type}}
+  onclick={{action 'click'}}>
+  {{#if isLoading}}
+    {{loading-spinner}}
+  {{/if}}
+  {{yield}}
+</button>

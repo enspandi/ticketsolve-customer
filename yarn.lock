@@ -2921,6 +2921,13 @@ ember-assign-polyfill@~2.4.0:
     ember-cli-babel "^6.6.0"
     ember-cli-version-checker "^2.0.0"
 
+ember-buffered-proxy@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/ember-buffered-proxy/-/ember-buffered-proxy-1.0.0.tgz#e8ce2f32231036f2391648dd273d5b7242e68a5a"
+  dependencies:
+    ember-cli-babel "^6.6.0"
+    ember-notify-property-change-polyfill "^0.0.1"
+
 ember-cli-app-version@^3.2.0:
   version "3.2.0"
   resolved "https://registry.yarnpkg.com/ember-cli-app-version/-/ember-cli-app-version-3.2.0.tgz#7b9ad0e1b63ae0518648356ee24c703e922bc26e"
@@ -3523,6 +3530,13 @@ ember-modal-dialog@^3.0.0-beta.3:
     ember-cli-version-checker "^2.1.0"
     ember-ignore-children-helper "^1.0.1"
     ember-wormhole "^0.5.5"
+
+ember-notify-property-change-polyfill@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/ember-notify-property-change-polyfill/-/ember-notify-property-change-polyfill-0.0.1.tgz#636f75e2aaf67e2c56cb13e7139499226fd60d55"
+  dependencies:
+    ember-cli-babel "^6.6.0"
+    ember-cli-version-checker "^2.1.0"
 
 ember-qunit@^3.4.1:
   version "3.5.3"

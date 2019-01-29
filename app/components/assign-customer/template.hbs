@@ -1,6 +1,6 @@
 {{#customer-search
     onSelect=(action 'select')
-    onCreate=(action 'create') as |search keyword|}}
+    onCreate=(action onCreate) as |search keyword|}}
 
   <div local-class="input-group {{if search.isOpen 'is-open'}}">
     <img data-test-icon src="assets/icon-customer.png" alt="Customer" />
@@ -8,7 +8,7 @@
     {{#if customer}}
       {{assign-customer/btn-edit
           label=(concat customer.firstName ' ' customer.lastName)
-          onClick=(action 'edit')}}
+          onClick=(action onEdit customer)}}
       {{assign-customer/btn-remove
           onClick=(action 'remove')}}
     {{else}}
@@ -17,8 +17,9 @@
 
   </div>
 
-  {{#search.dropdown as |option|}}
-    {{ui-customer-card model=option highlight=keyword}}
-  {{/search.dropdown}}
-
+  {{#unless customer}}
+    {{#search.dropdown as |option|}}
+      {{ui-customer-card model=option highlight=keyword}}
+    {{/search.dropdown}}
+  {{/unless}}
 {{/customer-search}}

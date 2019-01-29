@@ -1,0 +1,15 @@
+.ui-input {
+  display: block;
+  width: 100%;
+
+  font-size: 14px;
+
+  padding: 8px;
+  margin: 10px 0;
+
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  &::placeholder {
+    color: #ccc;
+  }
+}

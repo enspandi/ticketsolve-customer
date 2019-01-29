@@ -1,0 +1,20 @@
+.ui-button {
+  padding: 10px 15px;
+  border-radius: 2px;
+  font-weight: bold;
+
+  &.default {
+    background: #eee;
+    &:hover {
+      background: #999;
+      color: white;
+    }
+  }
+  &.primary {
+    background: #e91e63;
+    color: white;
+    &:hover {
+      background: #a31a4e;
+    }
+  }
+}
