@@ -31,9 +31,17 @@ function renderDropdown() {
   `);
 }
 
+function animationsSettled(ctx) {
+  return ctx.emberAnimated.waitUntilIdle.perform();
+}
+
 module('Integration | Component | customer-search', function(hooks) {
   setupRenderingTest(hooks);
   setupMirage(hooks);
+
+  hooks.beforeEach(function() {
+    this.emberAnimated = this.owner.lookup('service:-ea-motion');
+  });
 
   test('When the text input is focused, expand the dropdown', async function(assert) {
     await renderDropdown();
@@ -141,20 +149,23 @@ module('Integration | Component | customer-search', function(hooks) {
     await fillIn('[data-test-dropdown-trigger]', 'o');
     await settled();
 
-    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open 1');
 
     await click(`[data-test-dropdown-item]:nth-child(1)`);
+    await animationsSettled(this);
 
-    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed');
+
+    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed 1');
 
     await fillIn('[data-test-dropdown-trigger]', 'o');
-    await settled();
+    await animationsSettled(this);
 
-    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open 2');
 
     await navigateDown();
     await pressEnter();
+    await animationsSettled(this);
 
-    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed');
+    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed 2');
   });
 });

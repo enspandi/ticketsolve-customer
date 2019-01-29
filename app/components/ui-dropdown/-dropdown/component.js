@@ -4,6 +4,8 @@ import { isNone } from '@ember/utils';
 import { htmlSafe } from '@ember/template';
 import fade from 'ember-animated/transitions/fade';
 
+import ENV from 'ticketsolve-customer/config/environment';
+
 const KEY_UP = 38;
 const KEY_DOWN = 40;
 const KEY_ENTER = 13;
@@ -11,6 +13,7 @@ const KEY_ENTER = 13;
 export default Component.extend({
   localClassNames: ['dropdown-container'],
   fade,
+  fadeInDuration: ENV.environment === 'test' ? 0 : 200,
 
   didSearch: computed('options', function() {
     return !isNone(this.options);
