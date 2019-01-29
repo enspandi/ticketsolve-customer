@@ -3,38 +3,38 @@
     <div local-class="form-group" data-test-first-name>
       {{#form.label}}
         First name <span class="text-red">*</span>
+        {{form.input value=buffer.firstName placeholder="First name"}}
       {{/form.label}}
-      {{form.input value=buffer.firstName placeholder="First name"}}
     </div>
     <div local-class="form-group" data-test-last-name>
       {{#form.label}}
         Last name <span class="text-red">*</span>
+        {{form.input value=buffer.lastName placeholder="Last name"}}
       {{/form.label}}
-      {{form.input value=buffer.lastName placeholder="Last name"}}
     </div>
     <div local-class="form-group" data-test-email>
       {{#form.label}}
         Email <span class="text-red">*</span>
+        {{form.input value=buffer.email placeholder="Email"}}
       {{/form.label}}
-      {{form.input value=buffer.email placeholder="Email"}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Date of birth
+        {{form.input value=buffer.birthdate placeholder="Date of birth"}}
       {{/form.label}}
-      {{form.input value=buffer.birthdate placeholder="Date of birth"}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Phone
+        {{form.input value=buffer.phone placeholder="(+00) 1234-567890"}}
       {{/form.label}}
-      {{form.input value=buffer.phone placeholder="(+00) 1234-567890"}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Mobile
+        {{form.input value=buffer.mobile placeholder="(+00) 1234-567890"}}
       {{/form.label}}
-      {{form.input value=buffer.mobile placeholder="(+00) 1234-567890"}}
     </div>
   </div>
 
