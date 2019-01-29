@@ -23,4 +23,6 @@ export default function() {
     }
     return schema.db.customers;
   });
+  this.post('/customers');
+  this.put('/customers/:id');
 }

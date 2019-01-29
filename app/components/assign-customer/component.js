@@ -1,13 +1,10 @@
 import Component from '@ember/component';
 
 export default Component.extend({
+  onCreate: () => {},
+  onEdit: () => {},
+
   actions: {
-    create() {
-
-    },
-    edit() {
-
-    },
     remove() {
       this.set('customer', null);
     },

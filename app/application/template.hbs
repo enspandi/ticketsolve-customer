@@ -4,8 +4,20 @@
   </section>
 
   <section local-class="body">
+    {{assign-customer
+        customer=selected
+        onCreate=(action 'create')
+        onEdit=(action 'edit')}}
 
-    {{assign-customer}}
+    {{#if customer}}
+      {{#ui-modal title='Customer details'}}
+        {{ui-customer-form
+            model=customer
+            submitTask=save
+            onCancel=(action 'cancel')}}
+      {{/ui-modal}}
+    {{/if}}
+
 
     {{outlet}}
   </section>
