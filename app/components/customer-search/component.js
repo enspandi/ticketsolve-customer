@@ -34,6 +34,10 @@ export default Component.extend({
     select(customer) {
       this.set('isOpen', false);
       this.onSelect(customer);
+    },
+    create() {
+      this.set('isOpen', false);
+      this.onCreate();
     }
   }
 });

@@ -2,6 +2,7 @@ import Component from '@ember/component';
 import { computed } from '@ember/object';
 import { isNone } from '@ember/utils';
 import { htmlSafe } from '@ember/template';
+import fade from 'ember-animated/transitions/fade';
 
 const KEY_UP = 38;
 const KEY_DOWN = 40;
@@ -9,6 +10,7 @@ const KEY_ENTER = 13;
 
 export default Component.extend({
   localClassNames: ['dropdown-container'],
+  fade,
 
   didSearch: computed('options', function() {
     return !isNone(this.options);

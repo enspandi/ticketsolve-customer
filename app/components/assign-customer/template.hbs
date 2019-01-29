@@ -17,9 +17,7 @@
 
   </div>
 
-  {{#unless customer}}
-    {{#search.dropdown as |option|}}
-      {{ui-customer-card model=option highlight=keyword}}
-    {{/search.dropdown}}
-  {{/unless}}
+  {{#search.dropdown as |option|}}
+    {{ui-customer-card model=option highlight=keyword}}
+  {{/search.dropdown}}
 {{/customer-search}}

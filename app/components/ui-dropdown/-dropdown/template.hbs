@@ -1,43 +1,45 @@
-{{#if isOpen}}
   <div local-class="dropdown">
     {{#ember-tether
         target=attachTo
         targetAttachment='bottom left'
         attachment='top left'
       }}
-      <div local-class="dropdown-inner" role="listbox" style={{dropdownStyle}} data-test-dropdown>
-        {{#if isLoading}}
-          <div local-class="loading">
-            {{loading-spinner}} <i>{{loadingText}}</i>
+      {{#animated-container}}
+        {{#animated-if isOpen use=fade duration=200}}
+          <div local-class="dropdown-inner" role="listbox" style={{dropdownStyle}} data-test-dropdown>
+            {{#if isLoading}}
+              <div local-class="loading">
+                {{loading-spinner}} <i>{{loadingText}}</i>
+              </div>
+            {{/if}}
+
+            <ul>
+              {{#each options use=transition as |option|}}
+                {{#ui-dropdown/-item
+                    isActive=(eq option activeOption)
+                    onClick=(action onSelect option)
+                    onMouseEnter=(action 'setActive' option)
+                    onMouseLeave=(action 'setActive' null)
+                  }}
+                  {{#if hasBlock}}
+                    {{yield option}}
+                  {{else}}
+                    {{component optionComponent model=option}}
+                  {{/if}}
+                {{/ui-dropdown/-item}}
+              {{else if didSearch}}
+                <li local-class="no-result" data-test-no-result>{{noResultText}}</li>
+              {{/each}}
+            </ul>
+
+            {{#if onCreate}}
+              <button local-class="create-btn" type="button" data-test-create-btn
+                  {{action onCreate}}>
+                {{createText}}
+              </button>
+            {{/if}}
           </div>
-        {{/if}}
-
-        <ul>
-          {{#each options as |option|}}
-            {{#ui-dropdown/-item
-                isActive=(eq option activeOption)
-                onClick=(action onSelect option)
-                onMouseEnter=(action 'setActive' option)
-                onMouseLeave=(action 'setActive' null)
-              }}
-              {{#if hasBlock}}
-                {{yield option}}
-              {{else}}
-                {{component optionComponent model=option}}
-              {{/if}}
-            {{/ui-dropdown/-item}}
-          {{else if didSearch}}
-            <li local-class="no-result" data-test-no-result>{{noResultText}}</li>
-          {{/each}}
-        </ul>
-
-        {{#if onCreate}}
-          <button local-class="create-btn" type="button" data-test-create-btn
-              {{action onCreate}}>
-            {{createText}}
-          </button>
-        {{/if}}
-      </div>
+        {{/animated-if}}
+      {{/animated-container}}
     {{/ember-tether}}
   </div>
-{{/if}}
