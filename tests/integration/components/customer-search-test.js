@@ -150,22 +150,20 @@ module('Integration | Component | customer-search', function(hooks) {
     await settled();
 
     assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open 1');
-
     await click(`[data-test-dropdown-item]:nth-child(1)`);
+
     await animationsSettled(this);
-
-
     assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed 1');
 
     await fillIn('[data-test-dropdown-trigger]', 'o');
+    await settled();
     await animationsSettled(this);
 
     assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open 2');
-
     await navigateDown();
     await pressEnter();
-    await animationsSettled(this);
 
+    await animationsSettled(this);
     assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed 2');
   });
 });

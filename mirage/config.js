@@ -1,4 +1,6 @@
 import { isBlank } from '@ember/utils';
+import { Response } from 'ember-cli-mirage';
+
 
 function filterByFullName(records, name) {
   name = name.toLowerCase();
@@ -17,11 +19,23 @@ function filterByKeyword(records, attrs, keyword) {
   });
 }
 
+const FORBIDDEN_EOMJI = "🧐";
+
 export default function() {
   this.namespace = 'api';
 
   this.get('/customers', (schema, request) => {
     let keyword = request.queryParams['filter'];
+    if (keyword.includes(FORBIDDEN_EOMJI)) {
+      return new Response(422, {some: 'header', 'Content-Type': 'application/json'}, {
+        errors: [{
+          status: 422,
+          title: 'keyword is invalid',
+          description: `Cannot search for emojis ${FORBIDDEN_EOMJI}`
+        }]
+      });
+    }
+
     let allCustomers = schema.db.customers;
     if (!isBlank(keyword)) {
       let resultByFullName = filterByFullName(allCustomers, keyword);
