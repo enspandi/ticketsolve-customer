@@ -5,9 +5,9 @@ export default Component.extend({
   tagName: 'li',
 
   classNameBindings: ['isActive'],
-  attributeBindings: ['role', 'ariaCurrent', 'tabindex'],
+  attributeBindings: ['role', 'aria-current', 'aria-owns', 'tabindex'],
   role: 'option',
-  arriaCurrent: reads('isActive'),
+  'aria-current': reads('isActive'),
   tabindex: '-1',
 
   'data-test-dropdown-item': true,

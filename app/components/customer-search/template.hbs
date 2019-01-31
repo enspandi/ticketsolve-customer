@@ -1,22 +1,23 @@
 {{yield (hash
-    isOpen=isOpen
+    isOpen=isDropdownOpen
     trigger=(
       component 'ui-dropdown/-trigger'
         type='search'
-        onFocusIn=(action 'open')
-        onFocusOut=(action 'close')
-        onInput=(action (perform debounceSearch))
+        onFocusIn=(action 'focus')
+        onFocusOut=(action 'blur')
+        onInput=(action 'input')
     )
     dropdown=(
       component 'ui-dropdown/-dropdown'
         attachTo=element
         options=customers
-        isOpen=isOpen
-        isLoading=debounceSearch.isRunning
+        isOpen=isDropdownOpen
+        isLoading=isLoading
         optionComponent='ui-customer-card'
         loadingText='searching...'
         createText='Create a new customer'
         noResultText='No customers found...'
+        errorText=error
         onCreate=(action 'create')
         onSelect=(action 'select')
     )

@@ -19,7 +19,10 @@ export default Controller.extend({
 
   actions: {
     create() {
-      this.set('customer', EmberObject.create());
+      this.set('customer', EmberObject.create({
+        firstName: '',
+        lastName: ''
+      }));
     },
     edit(customer) {
       this.set('customer', customer);

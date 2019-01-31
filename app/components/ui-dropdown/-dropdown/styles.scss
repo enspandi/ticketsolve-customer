@@ -27,11 +27,20 @@
   background: #a31a4e;
 }
 
-.no-result {
+.no-result, .error {
   padding: 8px;
   color: #333;
   font-weight: bold;
   font-size: 13px;
+}
+.error {
+  background: #d4635a;
+  color: white;
+  & svg {
+    fill: white;
+    vertical-align: middle;
+    margin: 0 3px;
+  }
 }
 
 .loading {

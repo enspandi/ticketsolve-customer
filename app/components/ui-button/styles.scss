@@ -17,4 +17,8 @@
       background: #a31a4e;
     }
   }
+  &:disabled {
+    background: grey;
+    cursor: not-allowed;
+  }
 }

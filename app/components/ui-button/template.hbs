@@ -1,6 +1,6 @@
 <button data-test-button={{style}}
   local-class="ui-button {{style}}"
-  disabled={{isLoading}}
+  disabled={{or disabled isLoading}}
   type={{type}}
   onclick={{action 'click'}}>
   {{#if isLoading}}
