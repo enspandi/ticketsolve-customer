@@ -4,6 +4,7 @@
   submit=(
     component 'ui-button'
       type='submit'
+      disabled=(not buffer.hasChanges)
       isLoading=submitTask.isRunning
   ))
   buffer
