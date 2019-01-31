@@ -6,12 +6,6 @@ import { task, timeout } from 'ember-concurrency';
 import { statechart, matchesState } from 'ember-statecharts/computed';
 import ENV from 'ticketsolve-customer/config/environment';
 
-function whenClickOutside() {
-  return function(ctx, { data: event }) {
-    return !event.relatedTarget || !ctx.isChildElement(event.relatedTarget);
-  }
-}
-
 export default Component.extend({
   ticketsolve: service(),
 
@@ -36,7 +30,7 @@ export default Component.extend({
       },
       focus: {
         on: {
-          blur: { target: 'idle', cond: whenClickOutside() },
+          blur: { target: 'idle', cond: 'clickIsOutside' },
           create: 'create',
           select: 'select',
           input: 'typing'
@@ -49,7 +43,7 @@ export default Component.extend({
       searching: {
         onEntry: ['handleSearching'],
         on: {
-          blur: { target: 'idle', cond: whenClickOutside() },
+          blur: { target: 'idle', cond: 'clickIsOutside' },
           input: 'typing',
           create: 'create',
           succeeded: 'searchSuccess',
@@ -59,7 +53,7 @@ export default Component.extend({
       searchSuccess: {
         onEntry: ['handleSearchSuccess'],
         on: {
-          blur: { target: 'idle', cond: whenClickOutside() },
+          blur: { target: 'idle', cond: 'clickIsOutside' },
           input: 'typing',
           create: 'create',
           select: 'select'
@@ -68,7 +62,7 @@ export default Component.extend({
       searchError: {
         onEntry: ['handleSearchError'],
         on: {
-          blur: { target: 'idle', cond: whenClickOutside() },
+          blur: { target: 'idle', cond: 'clickIsOutside' },
           input: 'typing',
           create: 'create'
         }
@@ -83,6 +77,11 @@ export default Component.extend({
       }
     }
   }, {
+    guards: {
+      clickIsOutside(ctx, { data: event }) {
+        return !event.relatedTarget || !ctx.isChildElement(event.relatedTarget);
+      }
+    },
     actions: {
       handleCreate() {
         this.statechart.send('manuelClose');
