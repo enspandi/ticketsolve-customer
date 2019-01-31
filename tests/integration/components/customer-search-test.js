@@ -166,4 +166,32 @@ module('Integration | Component | customer-search', function(hooks) {
     await animationsSettled(this);
     assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed 2');
   });
+  test('When the user closes the dropdown the state should be cleared.', async function(assert) {
+    server.create('customer', { firstName: 'John' });
+    server.create('customer', { firstName: 'Tom' });
+    server.create('customer', { firstName: 'Monika' });
+
+    await render(hbs`
+      {{#customer-search as |search|}}
+        {{search.trigger}}
+        {{search.dropdown}}
+      {{/customer-search}}
+    `);
+
+    await fillIn('[data-test-dropdown-trigger]', 'o');
+    await settled();
+
+    assert.ok(document.querySelector('[data-test-dropdown]'), 'Dropdown is open');
+    assert.equal(document.querySelectorAll('[data-test-dropdown-item]').length, 3, '3 options visible');
+
+    await click(`[data-test-dropdown-item]:nth-child(1)`);
+
+    await animationsSettled(this);
+    assert.ok(!document.querySelector('[data-test-dropdown]'), 'Dropdown is closed');
+
+    await click(this.element.querySelector('[data-test-dropdown-trigger]'));
+    await animationsSettled(this);
+
+    assert.equal(document.querySelectorAll('[data-test-dropdown-item]').length, 0, 'No options visible');
+  });
 });

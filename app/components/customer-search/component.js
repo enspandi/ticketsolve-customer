@@ -26,6 +26,7 @@ export default Component.extend({
 
     states: {
       idle: {
+        onEntry: ['handleIdle'],
         on: { focus: 'focus' }
       },
       focus: {
@@ -83,6 +84,9 @@ export default Component.extend({
       }
     },
     actions: {
+      handleIdle() {
+        this._clearState();
+      },
       handleCreate() {
         this.statechart.send('manuelClose');
         this.onCreate();
@@ -95,7 +99,7 @@ export default Component.extend({
         return this.statechart.send('searching', value);
       },
       handleSearching(value) {
-        this.setProperties({ keyword: null, customers: null, error: null });
+        this._clearState();
         this.debounceSearch.perform(value);
       },
       handleSearchSuccess({ keyword, customers }) {
@@ -110,6 +114,10 @@ export default Component.extend({
 
   onSelect: () => {},
   onCreate: () => {},
+
+  _clearState() {
+    this.setProperties({ keyword: null, customers: null, error: null });
+  },
 
   debounceSearch: task(function*(keyword) {
     yield timeout(ENV.environment === 'test' ? 0 : 350);
