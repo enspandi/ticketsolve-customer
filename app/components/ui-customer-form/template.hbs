@@ -1,39 +1,42 @@
-{{#ui-form submitTask=submitTask model=model as |form buffer|}}
+{{#ui-form
+  submitTask=submitTask
+  validations=validations
+  model=model as |form|}}
   <div local-class="form-group-container" data-test-customer-form>
     <div local-class="form-group" data-test-first-name>
       {{#form.label}}
         First name <span class="text-red">*</span>
-        {{form.input value=buffer.firstName placeholder="First name"}}
+        {{form.input field='firstName' placeholder="First name"}}
       {{/form.label}}
     </div>
     <div local-class="form-group" data-test-last-name>
       {{#form.label}}
         Last name <span class="text-red">*</span>
-        {{form.input value=buffer.lastName placeholder="Last name"}}
+        {{form.input field='lastName' placeholder="Last name"}}
       {{/form.label}}
     </div>
     <div local-class="form-group" data-test-email>
       {{#form.label}}
         Email <span class="text-red">*</span>
-        {{form.input value=buffer.email placeholder="Email"}}
+        {{form.input field='email' placeholder="Email"}}
       {{/form.label}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Date of birth
-        {{form.input value=buffer.birthdate placeholder="Date of birth"}}
+        {{form.input field='birthdate' placeholder="Date of birth"}}
       {{/form.label}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Phone
-        {{form.input value=buffer.phone placeholder="(+00) 1234-567890"}}
+        {{form.input field='phone' placeholder="(+00) 1234-567890"}}
       {{/form.label}}
     </div>
     <div local-class="form-group">
       {{#form.label}}
         Mobile
-        {{form.input value=buffer.mobile placeholder="(+00) 1234-567890"}}
+        {{form.input field='mobile' placeholder="(+00) 1234-567890"}}
       {{/form.label}}
     </div>
   </div>

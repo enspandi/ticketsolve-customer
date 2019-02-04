@@ -1,5 +1,11 @@
-import TextField from '@ember/component/text-field';
+import Component from '@ember/component';
 
-export default TextField.extend({
-  localClassNames: ['ui-input']
+export default Component.extend({
+  tagName: '',
+
+  actions: {
+    setValue(value) {
+      this.model.set(this.field, value);
+    }
+  }
 });

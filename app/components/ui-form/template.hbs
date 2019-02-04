@@ -1,10 +1,14 @@
 {{yield (hash
   label=(component 'ui-form/label')
-  input=(component 'ui-form/input')
+  input=(
+    component 'ui-form/input' model=buffer
+  )
   submit=(
     component 'ui-button'
       type='submit'
-      disabled=(not buffer.hasChanges)
+      disabled=(
+        or (not buffer.hasChanges) (v-get buffer 'isInvalid')
+      )
       isLoading=submitTask.isRunning
   ))
   buffer

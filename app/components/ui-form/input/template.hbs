@@ -1,1 +1,5 @@
-{{yield}}
+<input
+  local-class="ui-input"
+  value={{get model field}}
+  oninput={{action 'setValue' value="target.value"}}>
+<span class="text-red">{{v-get model field 'message'}}</span>

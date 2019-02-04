@@ -13,8 +13,8 @@ module('Integration | Component | ui-form', function(hooks) {
       firstName: ''
     }));
     await render(hbs`
-      {{#ui-form model=model as |form buffer|}}
-        {{form.input value=buffer.firstName}}
+      {{#ui-form model=model as |form|}}
+        {{form.input field='firstName'}}
         {{#form.submit}}Submit Button{{/form.submit}}
       {{/ui-form}}
     `);
