@@ -1,7 +1,6 @@
 import Component from '@ember/component';
 import { inject as service } from '@ember/service';
 import { reads, not } from '@ember/object/computed';
-import { on } from '@ember/object/evented';
 import { task, timeout } from 'ember-concurrency';
 import { statechart, matchesState } from 'ember-statecharts/computed';
 import ENV from 'ticketsolve-customer/config/environment';
@@ -10,75 +9,78 @@ import { isBlank } from '@ember/utils';
 export default Component.extend({
   ticketsolve: service(),
 
-  isIdle: matchesState('idle'),
-  isFocused: matchesState('focus'),
-  isTyping: matchesState('typing'),
-  isSearching: matchesState('searching'),
-  isSearchSuccess: matchesState('searchSuccess'),
-  isSearchError: matchesState('searchError'),
-  isSelect: matchesState('select'),
-  isCreate: matchesState('create'),
+  isClosed: matchesState('closed'),
+  isFocused: matchesState('focus.idle'),
+  isTyping: matchesState('focus.typing'),
+  isSearching: matchesState('focus.searching'),
+  isSearchSuccess: matchesState('focus.searchSuccess'),
+  isSearchError: matchesState('focus.searchError'),
+  isSelect: matchesState('focus.select'),
+  isCreate: matchesState('focus.create'),
 
-  isDropdownOpen: not('isIdle'),
+  isDropdownOpen: not('isClosed'),
   isLoading: reads('isSearching'),
 
   statechart: statechart({
-    initial: 'idle',
+    initial: 'closed',
 
     states: {
-      idle: {
-        onEntry: ['handleIdle'],
+      closed: {
+        onEntry: ['handleClosed'],
         on: { focus: 'focus' }
       },
       focus: {
+        initial: 'idle',
         on: {
-          blur: { target: 'idle', cond: 'clickIsOutside' },
-          create: 'create',
-          select: 'select',
-          input: 'typing'
+          blur: { target: 'closed', cond: 'clickIsOutside' },
+          close: { target: 'closed' }
+        },
+        states: {
+          idle: {
+            on: {
+              create: 'create',
+              select: 'select',
+              input: 'typing'
+            }
+          },
+          typing: {
+            onEntry: ['handleTyping'],
+            on: {
+              empty: 'idle',
+              searching: 'searching'
+            }
+          },
+          searching: {
+            onEntry: ['handleSearching'],
+            on: {
+              input: 'typing',
+              create: 'create',
+              succeeded: 'searchSuccess',
+              errored: 'searchError'
+            }
+          },
+          searchSuccess: {
+            onEntry: ['handleSearchSuccess'],
+            on: {
+              input: 'typing',
+              create: 'create',
+              select: 'select'
+            }
+          },
+          searchError: {
+            onEntry: ['handleSearchError'],
+            on: {
+              input: 'typing',
+              create: 'create'
+            }
+          },
+          select: {
+            onEntry: ['handleSelect']
+          },
+          create: {
+            onEntry: ['handleCreate']
+          }
         }
-      },
-      typing: {
-        onEntry: ['handleTyping'],
-        on: {
-          empty: 'focus',
-          searching: 'searching'
-        }
-      },
-      searching: {
-        onEntry: ['handleSearching'],
-        on: {
-          blur: { target: 'idle', cond: 'clickIsOutside' },
-          input: 'typing',
-          create: 'create',
-          succeeded: 'searchSuccess',
-          errored: 'searchError'
-        }
-      },
-      searchSuccess: {
-        onEntry: ['handleSearchSuccess'],
-        on: {
-          blur: { target: 'idle', cond: 'clickIsOutside' },
-          input: 'typing',
-          create: 'create',
-          select: 'select'
-        }
-      },
-      searchError: {
-        onEntry: ['handleSearchError'],
-        on: {
-          blur: { target: 'idle', cond: 'clickIsOutside' },
-          input: 'typing',
-          create: 'create'
-        }
-      },
-      select: {
-        onEntry: ['handleSelect'],
-        on: { manuelClose: 'idle' }
-      },
-      create: {
-        onEntry: ['handleCreate'],
-        on: { manuelClose: 'idle' }
       }
     }
   }, {
@@ -88,15 +90,15 @@ export default Component.extend({
       }
     },
     actions: {
-      handleIdle() {
+      handleClosed() {
         this._clearState();
       },
       handleCreate() {
-        this.statechart.send('manuelClose');
+        this.statechart.send('close');
         this.onCreate();
       },
       handleSelect(customer) {
-        this.statechart.send('manuelClose');
+        this.statechart.send('close');
         this.onSelect(customer);
       },
       handleTyping(value) {
@@ -128,15 +130,13 @@ export default Component.extend({
 
   debounceSearch: task(function*(keyword) {
     yield timeout(ENV.environment === 'test' ? 0 : 350);
-    return this.ticketsolve.queryCustomers(keyword);
-  }).restartable().evented(),
-
-  searchSuccess: on('debounceSearch:succeeded', function({ args, value }) {
-    this.statechart.send('succeeded', { keyword: args[0], customers: value });
-  }),
-  searchError: on('debounceSearch:errored', function({ error }) {
-    this.statechart.send('errored', error);
-  }),
+    try {
+      let customers = yield this.ticketsolve.queryCustomers(keyword);
+      this.statechart.send('succeeded', { keyword, customers });
+    } catch (error) {
+      this.statechart.send('errored', error);
+    }
+  }).restartable(),
 
   isChildElement(child) {
     return this.element.contains(child) || child.getAttribute('aria-owns') === this.elementId;
