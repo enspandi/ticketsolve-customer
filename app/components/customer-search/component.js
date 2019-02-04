@@ -5,6 +5,7 @@ import { on } from '@ember/object/evented';
 import { task, timeout } from 'ember-concurrency';
 import { statechart, matchesState } from 'ember-statecharts/computed';
 import ENV from 'ticketsolve-customer/config/environment';
+import { isBlank } from '@ember/utils';
 
 export default Component.extend({
   ticketsolve: service(),
@@ -39,7 +40,10 @@ export default Component.extend({
       },
       typing: {
         onEntry: ['handleTyping'],
-        on: { searching: 'searching' }
+        on: {
+          empty: 'focus',
+          searching: 'searching'
+        }
       },
       searching: {
         onEntry: ['handleSearching'],
@@ -96,10 +100,13 @@ export default Component.extend({
         this.onSelect(customer);
       },
       handleTyping(value) {
+        this._clearState();
+        if (isBlank(value)) {
+          return this.statechart.send('empty');
+        }
         return this.statechart.send('searching', value);
       },
       handleSearching(value) {
-        this._clearState();
         this.debounceSearch.perform(value);
       },
       handleSearchSuccess({ keyword, customers }) {
